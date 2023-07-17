@@ -1,3 +1,4 @@
+import configparser
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -18,3 +19,16 @@ def send_email(subject, message, from_addr, to_addr, password, smtp_addr, smtp_p
     text = msg.as_string()  # 将 MIMEMultipart 对象转换为字符串
     server.sendmail(from_addr, to_addr, text)
     server.quit()
+
+def smtp(subject,content):
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    # 访问配置
+    server = config['SMTP']['server']
+    tls = config['SMTP']['tls']
+    port = int(config['SMTP']['port'])
+    from_user = config['SMTP']['username']
+    password = config['SMTP']['password']
+    to_user = config['SMTP']['to']
+
+    send_email(subject=subject, message=content, from_addr=from_user, to_addr=to_user, password=password, smtp_addr=server, smtp_port=port, smtp_tls=tls)

@@ -1,6 +1,6 @@
 import re
 import configparser
-from plugins.smtp import send_email
+from plugins.smtp import smtp
 from datetime import datetime
 
 
@@ -32,17 +32,12 @@ def main():
     last_logs = find_last_start_up(logs_msg)
     content = "  \n".join(last_logs)
 
+    subject = f'MAA Notify{formatted_now}'
+
     config = configparser.ConfigParser()
     config.read('config.ini')
     # 访问配置
-    server = config['SMTP']['server']
-    tls = config['SMTP']['tls']
-    port = int(config['SMTP']['port'])
-    from_user = config['SMTP']['username']
-    password = config['SMTP']['password']
-    to_user = config['SMTP']['to']
-    subject = f'MAA Notify{formatted_now}'
 
-    send_email(subject, message=content, from_addr=from_user, to_addr=to_user, password=password, smtp_addr=server, smtp_port=port, smtp_tls=tls)
+    smtp(subject, content)
 
 main()
