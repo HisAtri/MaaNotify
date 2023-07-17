@@ -1,6 +1,7 @@
 import re
 import configparser
 from plugins.smtp import send_email
+from datetime import datetime
 
 
 def find_last_start_up(items):
@@ -15,6 +16,8 @@ def find_last_start_up(items):
         return []
 
 def main():
+    now = datetime.now()
+    formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
     with open("debug/gui.log", "r", encoding="utf8") as _logs:
         logs = _logs.readlines()
     logs_msg = []
@@ -38,7 +41,7 @@ def main():
     from_user = config['SMTP']['username']
     password = config['SMTP']['password']
     to_user = config['SMTP']['to']
-    subject = 'MAA Notify'
+    subject = f'MAA Notify{formatted_now}'
 
     send_email(subject, message=content, from_addr=from_user, to_addr=to_user, password=password, smtp_addr=server, smtp_port=port, smtp_tls=tls)
 
